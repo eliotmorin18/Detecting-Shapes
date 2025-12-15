@@ -91,3 +91,13 @@ This allows us to reliably distinguish the two shapes even with noisy samples.
   - Simplicial complexes
   - Persistent homology
   - Topological invariants
+
+
+
+## Activate the environnement 
+
+ using Pkg
+Pkg.activate(".")
+
+To verify you are on the environment use:
+Pkg.status()

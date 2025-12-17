@@ -87,4 +87,4 @@ function make_ellipsoid_dataset(; K::Int=50, N::Int=900,
 end
 
 # ---- Lance la génération ----
-make_ellipsoid_dataset(K=50, N=900, a=4.0, b=2.5, c=1.5, σ=0.02, translate_scale=5.0)
+make_ellipsoid_dataset(K=50, N=150, a=4.0, b=2.5, c=1.5, σ=0.02, translate_scale=5.0)

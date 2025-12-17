@@ -1,5 +1,3 @@
-# src/preprocessing.jl
-module Preprocessing
 
 export load_pointcloud_csv, center_points, normalize_scale, prepare_points
 
@@ -116,4 +114,3 @@ function prepare_points(
     return P
 end
 
-end # module

@@ -92,4 +92,4 @@ function make_torus_dataset(; K::Int=40, N::Int=1000,
 end
 
 # ---- Lance la génération ----
-make_torus_dataset(K=40, N=1000, R=4.0, r=1.2, σ=0.02, translate_scale=5.0)
+make_torus_dataset(K=40, N=300, R=4.0, r=1.2, σ=0.02, translate_scale=5.0)

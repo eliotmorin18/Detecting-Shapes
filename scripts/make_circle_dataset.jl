@@ -84,4 +84,4 @@ function make_circle_dataset(; K::Int=50, N::Int=400, R::Float64=3.0, σ::Float6
 end
 
 # ---- Lance la génération ----
-make_circle_dataset(K=50, N=400, R=3.0, σ=0.03, translate_scale=5.0)
+make_circle_dataset(K=50, N=80, R=3.0, σ=0.03, translate_scale=5.0)

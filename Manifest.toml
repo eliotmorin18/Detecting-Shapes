@@ -2,7 +2,7 @@
 
 julia_version = "1.12.2"
 manifest_format = "2.0"
-project_hash = "634ea7f49ffd2ec1f09d864b77a5f0196edd152d"
+project_hash = "7495d5584f33f495656c19256e0ce45d7df59a1a"
 
 [[deps.AliasTables]]
 deps = ["PtrArrays", "Random"]
@@ -166,7 +166,7 @@ uuid = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 version = "1.9.1"
 
 [[deps.DetectingShapes]]
-deps = ["CSV", "DataFrames", "Distributions", "PlotlyJS", "Plots"]
+deps = ["CSV", "DataFrames", "Distributions", "LinearAlgebra", "PlotlyJS", "Plots", "Test"]
 path = "."
 uuid = "d4c3e3b0-7a3f-4f2b-9a5c-0f2b7e6a1234"
 version = "0.1.0"

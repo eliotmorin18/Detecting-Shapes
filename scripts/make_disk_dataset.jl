@@ -88,4 +88,4 @@ function make_disk_dataset(; K::Int=50, N::Int=600, R::Float64=3.0,
 end
 
 # ---- Lance la génération ----
-make_disk_dataset(K=50, N=600, R=3.0, σ_xy=0.03, σ_z=0.01, translate_scale=5.0)
+make_disk_dataset(K=50, N=100, R=3.0, σ_xy=0.03, σ_z=0.01, translate_scale=5.0)

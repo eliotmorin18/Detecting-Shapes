@@ -101,4 +101,4 @@ function make_potato_dataset(; K::Int=30, N::Int=2000,
 end
 
 # ---- Lance la génération ----
-make_potato_dataset(K=30, N=2000, R=3.0, α=0.25, σ=0.01, translate_scale=5.0)
+make_potato_dataset(K=30, N=400, R=3.0, α=0.25, σ=0.01, translate_scale=5.0)

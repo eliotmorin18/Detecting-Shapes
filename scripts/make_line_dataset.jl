@@ -81,4 +81,4 @@ function make_line_segment_dataset(; K::Int=50, N::Int=300, L::Float64=10.0, σ:
 end
 
 # ---- Lance la génération ----
-make_line_segment_dataset(K=50, N=300, L=10.0, σ=0.05, translate_scale=5.0)
+make_line_segment_dataset(K=50, N=100, L=10.0, σ=0.05, translate_scale=5.0)

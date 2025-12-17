@@ -83,4 +83,4 @@ function make_sphere_dataset(; K::Int=50, N::Int=800, R::Float64=3.0,
 end
 
 # ---- Lance la génération ----
-make_sphere_dataset(K=50, N=800, R=3.0, σ=0.02, translate_scale=5.0)
+make_sphere_dataset(K=50, N=150, R=3.0, σ=0.02, translate_scale=5.0)

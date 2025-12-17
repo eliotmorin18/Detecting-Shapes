@@ -101,3 +101,9 @@ Pkg.activate(".")
 
 To verify you are on the environment use:
 Pkg.status()
+
+
+## run the test 
+import Pkg
+Pkg.activate(".")
+Pkg.test()

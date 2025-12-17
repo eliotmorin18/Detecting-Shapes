@@ -6,7 +6,7 @@ include(joinpath(@__DIR__, "..", "src", "preprocessing.jl"))  # defines prepare_
 include(joinpath(@__DIR__, "..", "src", "filtration.jl"))     # defines pairwise_distances, build_event_filtration, persistence_pairs, filter_pairs
 
 # --- Parameters
-csv_path = joinpath(@__DIR__, "..", "data", "potato", "samples", "potato_0004.csv")
+csv_path = joinpath(@__DIR__, "..", "data", "torus", "samples", "torus_0001.csv")
 NKEEP    = 80
 EPS_MAX  = 1.0        # start small to avoid combinatorial explosion
 
@@ -57,7 +57,7 @@ n_inf_H0 = count(p -> isinf(p[2]), pairsH0)
 println("  H0 intervals with death=Inf: ", n_inf_H0)
 
 # show some H1 intervals (filtered)
-pairsH1_big = filter_pairs(pairsH1; min_persistence=0.2, keep_inf=true)
+pairsH1_big = filter_pairs(pairsH1; min_persistence=0.1, keep_inf=true)
 println("  H1 intervals with persistence >= 0.45 (or Inf): ", length(pairsH1_big))
 
 println("\n==== First 10 H1 (filtered) ====")
@@ -67,3 +67,5 @@ for p in pairsH1_big[1:min(10, length(pairsH1_big))]
             isinf(p[2]) ? "Inf" : @sprintf("%.6f", p[2]),
             isinf(p[2]) ? "Inf" : @sprintf("%.6f", p[2]-p[1]))
 end
+
+

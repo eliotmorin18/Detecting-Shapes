@@ -1,0 +1,65 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.geometric}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx} % For including images
+\usepackage{subcaption} % For subfigures
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+
+% Julia setup 
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+
+\lstdefinelanguage{Julia}{
+  keywords={function, end, return, if, else, for, while, in, using, import},
+  sensitive=true,
+  comment=[l]\#,
+  morestring=[b]",
+}
+
+\lstset{
+  language=Julia,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{orange},
+  showstringspaces=false
+}
+
+\renewcommand\thesubsubsection{\thesubsection.\alph{subsubsection}}
+
+\title{Computation Topology - Shape Detection}
+\author{Eske Bockelmann, Elliot Morin}
+
+\begin{document}
+\maketitle
+
+\include{pseudocode/rips_complex}
+\include{pseudocode/cech_complex}
+
+
+\begin{lstlisting}
+    include("graphcomponents.jl")
+    # example 1 from excercise    
+    V = [1,2,3,4,5,6,7,8]
+    E = [(1,2),(2,3),(1,3),(4,5),(5,6),(5,7),(6,7),(7,8)]
+    # example to write some julia code in latex with nice highlighting
+\end{lstlisting}
+%
+
+\end{document}
+

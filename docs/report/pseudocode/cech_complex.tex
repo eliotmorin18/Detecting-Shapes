@@ -1,0 +1,95 @@
+\begin{algorithm}
+\caption{minimal\_enclosing\_ball(S) = MEB(S)} \label{alg:minimal_enclosing_ball}
+\begin{algorithmic}
+    \Require Point cloud $S$
+    \Ensure radius and origin of minimal enclosing ball $r, \text{origin}$
+
+    \State$n \gets length(S)$
+    \If{n == 2}
+        \State$r \gets \|S[1] - S[2] \|/2$
+        \State$\text{origin} = S[1] + \frac{1}{2}*(S[2] - S[1])$ 
+        
+        \State \Return $r, \text{origin}$
+    \Else 
+        \For{$i \in 1:n$}
+            \State$r,\text{origin} \gets minimal\_enclosing\_ball(S \setminus S[i])$
+            \If{$\|S[i] - \text{origin} \| \leq r $} \Comment{S[i] in the MEB$(S\setminus S[i])$}
+                
+                \State \Return $r,\text{origin}$
+            \EndIf
+        \EndFor
+        
+        \Comment{Otherwise the MEB is the ball through all vertices}
+        \State$d \gets length(S[1])$
+        
+        \State$ A = 2 * \left(\begin{aligned}
+             (S[2] &- S[1])^T \\
+             &\vdots \\
+             (S[n] &- S[1])^T 
+            \end{aligned}\right) \in \mathbb{R}^{n-1,d}$
+
+        \State$ b =\left(\begin{aligned}
+            \| S[2] \| ^2 &- \| S[1] \| ^2 \\
+            &\vdots \\ 
+            \| S[n] \| ^2 &- \| S[1] \| ^2 
+            \end{aligned}\right) \in \mathbb{R}^{n-1}$
+        \State$\text{origin} = A\setminus b$
+        \State$r = \| \text{origin } - S[1] \| $
+        \State \Return $r,\text{origin}$
+    \EndIf
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{cech\_complex(S,r)}\label{alg:cech_complex}
+\begin{algorithmic}
+    \Require Point cloud $S$, radius $r$
+    \Ensure Cech Complex $CC$ 
+
+    \State $n\gets length(S)$
+    \State $CC \gets [(i,) \text{ for }i\in\, 1:n]$
+    
+    \For{$i \in 1:n$}
+        \For{$j \in (i+1):n$}
+            \If{$\|S[i] - S[j]\| \leq r$}
+                \State $CC \gets CC \cup \{(i,j)\}$
+            \EndIf 
+        \EndFor 
+    \EndFor
+
+    \State$dim \gets 2 $
+    \State$L \gets \text{All simplices in RC of length} == dim$
+    \While{$L \not = \emptyset$}
+        \State$dim \gets dim + 1$
+        \State$new\_simplices \gets \text{all possible } dim \text{ combinations of simplices in} L$
+        
+        \For{sx in new\_simplices}
+            \State$sx \gets \{\text{vertices of sx}\}$
+        \EndFor 
+        
+        \State $new\_simplices \gets \text{Only keep those simplices which have exactly }dim\text{ different vertices}$
+        \State $new\_simplices \gets \text{Only keep those simplices where the radius of MEB(vertices) }\leq r$
+        
+        
+        \State $CC \gets CC \cup new\_simplices$
+        \State $L \gets \text{All simplices in RC of length} == dim$
+    \EndWhile 
+
+    \State \Return $CC$
+
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\begin{algorithmic}
+    \caption{cech\_filtration(S,R)}\label{alg:cech_filtration}
+    \Require Point cloud $S$, list of different radii $R$
+    \Ensure Cech filtration $CF$
+
+    \For{$r \in R$}
+        \State$CF[r] => cech\_complex(S,r)$
+    \EndFor
+    
+    \Return $CF$
+\end{algorithmic}
+\end{algorithm}

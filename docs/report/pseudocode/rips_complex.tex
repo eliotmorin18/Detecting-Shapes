@@ -1,0 +1,51 @@
+
+\begin{algorithm}
+\caption{rips\_complex(S,r)}\label{alg:rips_complex}
+\begin{algorithmic}
+    \Require Point cloud $S$, radius $r$
+    \Ensure Rips complex $RC$
+
+    \State $n\gets length(S)$
+    \State $RC \gets [(i,) \text{ for }i\in\, 1:n]$
+    
+    \For{$i \in 1:n$}
+        \For{$j \in (i+1):n$}
+            \If{$\|S[i] - S[j]\| \leq r$}
+                \State $RC \gets RC \cup \{(i,j)\}$
+            \EndIf 
+        \EndFor 
+    \EndFor
+
+    \State$dim \gets 2 $
+    \State$L \gets \text{All simplices in RC of length} == dim$
+    \While{$L \not = \emptyset$}
+        \State$dim \gets dim + 1$
+        \State$new\_simplices \gets \text{all possible } dim \text{ combinations of simplices in} L$
+        
+        \For{sx in new\_simplices}
+            \State$sx \gets \{\text{vertices of sx}\}$
+        \EndFor 
+        
+        \State $new\_simplices \gets \text{Only keep those simplices which have exactly }dim\text{ different vertices}$
+        
+        \State $RC \gets RC \cup new\_simplices$
+        \State $L \gets \text{All simplices in RC of length} == dim$
+    \EndWhile 
+
+    \Return $RC$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\begin{algorithmic}
+    \caption{rips\_filtration(S,R)}\label{alg:rips_filtration}
+    \Require Point cloud $S$, list of different radii $R$
+    \Ensure Rips filtration $RF$
+
+    \For{$r \in R$}
+        \State$RF[r] => rips\_complex(S,r)$
+    \EndFor
+    
+    \Return $RF$
+\end{algorithmic}
+\end{algorithm}

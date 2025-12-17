@@ -92,7 +92,10 @@ This allows us to reliably distinguish the two shapes even with noisy samples.
   - Persistent homology
   - Topological invariants
 
-
+## Report 
+main tex code can be found in ShapeDetection.tex 
+Pseudocodes shoud be written in a file in the folder pseudocode 
+Images should be uploaded in the folder images 
 
 ## Activate the environnement 
 

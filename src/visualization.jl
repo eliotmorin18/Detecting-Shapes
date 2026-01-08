@@ -1,11 +1,11 @@
 # src/visualization.jl
 module Visualization
 
-export pointcloud_3d
+export pointcloud_3d, plot_persistence_silhouette_approx
 
-using Plots 
+using Plots
 
-function pointcloud_3d(S; check_npoints = true)
+function plot_pointcloud_3d(S; check_npoints = true)
     # plots a pointcloud in 3d 
 
     # INPUT 
@@ -38,5 +38,22 @@ function pointcloud_3d(S; check_npoints = true)
         legend = false
     )
 
+    return pl
+
 end 
+
+function plot_persistence_silhouette_approx(ts; ttl = "persistence silhouette")
+    # INPUT
+    # vector ts indicating the value of the persistence silhuette at time t 
+    
+    pl = scatter(
+        1:length(ts), 
+        ts;
+        xlabel = "time",
+        title = ttl,
+        legend = false 
+    )
+    return pl
+end 
+
 end # end module 

@@ -32,21 +32,7 @@ function create_custom_filtration(filtration)
     return Custom(c_pair)
 end 
 
-function create_wasserstein_matrix(pointclouds, filtration_type, print_output)
-    # crate a matrix containing the wasserstein distances for all the pointclouds
-
-    # INPUT 
-    # pointclouds = Vecor, each entry is a pointcloud 
-    # filtration_type = "Rips", "Cech", "Ripserer" 
-
-    # ASSUMPTIONS 
-    # all pointclouds have the same dimension
-
-    # OUTPUT
-    # Ds = vector containing the distance matrices of persistence diagrams for H_i i in 0:(dim-1) 
-    # Ds[hi] = distance matrix for hi in 1:dim == 0:(dim-1)
-    # Ds[hi][i,j] = Ds[hi][j,i] = Wasserstein Distance between persistence diagrams of the point clouds
-
+function create_persistence_diagram(pointclouds, filtration_type, print_output)
     if print_output
         println("Create Wasserstein Matrix with the filtration_type ", filtration_type)
     end 
@@ -60,7 +46,6 @@ function create_wasserstein_matrix(pointclouds, filtration_type, print_output)
     end 
 
     results = [] 
-    Ds = [zeros(n_pointclouds, n_pointclouds) for i in 1:(dim-1)]
 
     for i in 1:n_pointclouds 
         # for each pointcloud 
@@ -91,7 +76,7 @@ function create_wasserstein_matrix(pointclouds, filtration_type, print_output)
             end 
 
             custom_filtration = create_custom_filtration(filtration)
-            result = ripserer(custom_filtration; alg = :homology)
+            result = ripserer(custom_filtration; alg = :homology, dim_max = dim-1)
         elseif filtration_type == "Cech"
             # different radii to use 
             R = Filtration.quantile_distances(S)
@@ -120,16 +105,21 @@ function create_wasserstein_matrix(pointclouds, filtration_type, print_output)
         
         # save the result 
         push!(results, result)
-        
-        # compute and save the distances
-        if print_output
-            println("start to compute the distances")
-        end
+    end 
+    return results
+end 
 
+function create_wasserstein_matrix(diagrams)
+    # crate a matrix containing the wasserstein distances for all the pointclouds
+    n_dim = length(diagrams[1])
+    n_diagrams = length(diagrams)
+    Ds = [zeros(n_diagrams, n_diagrams) for i in 1:n_dim]
+
+    for (i,diagram) in enumerate(diagrams)
         for j in 1:(i-1)
-            for hi in 1:(dim-1) 
-                d1 = Wasserstein()(result[hi], results[j][hi])
-                d2 = Wasserstein()(results[j][hi], result[hi])
+            for hi in 1:n_dim
+                d1 = Wasserstein()(diagram[hi], diagrams[j][hi])
+                d2 = Wasserstein()(diagrams[j][hi], diagram[hi])
                 # the computed distances are not exactly the same, if e.g. one does not have any entries in H_2 while the second one has, the distance is zero
                 # interchanging the arguments give a positive distance 
                 # Thus we take the maximum 
@@ -138,21 +128,81 @@ function create_wasserstein_matrix(pointclouds, filtration_type, print_output)
                 Ds[hi][j,i] = d 
             end 
         end
-        if print_output
-            println("distances computed")
-        end 
     end 
-
-    
-
-    
-
     return Ds
 end 
 
+function persistence_silhoutte(diagram; T = 100, p=1)
+    # computes the persistence silhouette using the definitions from this paper https://arxiv.org/pdf/1312.0308
 
+    # INPUT 
+    # diagram = persistence diagram, out put from ripserer 
+    # T = 100 integer, indicating the number of timepoints on time axis 
+    # p = 1 or another number, for weight computation 
 
+    # OUTPUT 
+    # silhouette = vector representing the value of the silhuette function along the time 
 
+    if length(diagram) == 0 
+        return zeros(T)
+    end 
 
+    # the bars of the barcode with all the entries which dies in finite time
+    bars = [(d.birth, d.death) for d in diagram if d.death < Inf]
 
+    # the weights for the persistence silhouette are given by (death - birth)^p 
+    weights = [(bar[2] - bar[1])^p for bar in bars]
+
+    # the time vector from first birth till last finite death
+    ts = range(minimum(bar[1] for bar in bars), maximum(bar[2] for bar in bars), length = T)
+
+    # initiate silhouette vector
+    sil = zeros(length(ts))
+
+    for ((b, d), w) in zip(bars, weights)
+        # b = birth, d = death, w = weight 
+        mid = (b + d)/2
+        for (j,t) in enumerate(ts)
+            if b <= t <= mid 
+                sil[j] += w* (t-b)
+            elseif mid < t <= d
+                sil[j] += w* (d - t)
+            end 
+        end 
+    end 
+    
+    sil = sil ./ sum(weights) 
+    return sil
+end 
+
+function create_persistence_silhoutte(diagrams, weights)
+    # creates the concatenated silhouettes for all the diagrams 
+
+    # INPUT 
+    # diagrams = vector, each entry is a list of the persistence diagrams for that pointcloud in the different dimensions (for H_0, H_1...)
+
+    # OUTPUT 
+    # silhouettes =  list contatining all the concatenated silhouttes for all the pointclouds 
+
+    # concatenate all the persistence silhuettes
+    silhouettes = []
+    for all_diag in diagrams
+        # concatenated silhouettes 
+
+        sil_total = []
+        for (i,diag) in enumerate(all_diag) 
+
+            # normalize in each dimension separatly 
+            sil = persistence_silhoutte(diag) 
+            if !(norm(sil) == 0)
+                sil ./ norm(sil)
+            end 
+            # concatenate 
+            append!(sil_total,weights[i] .* sil)
+        end 
+        # add concatenated sequence to all the others 
+        push!(silhouettes, sil_total)
+    end 
+    return silhouettes
+end 
 end # end module 

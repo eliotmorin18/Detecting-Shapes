@@ -28,8 +28,10 @@ function plot_pointcloud_3d(S; check_npoints = true)
     y = getindex.(S, 2)
     z = last.(S)
 
+    # if you want to turn the plot uncomment the following line 
+    #plotlyjs()
     pl = scatter(
-        x, y, z;
+        x,y, z;
         seriestype = :scatter,
         markersize = markersize,
         xlabel = "x",

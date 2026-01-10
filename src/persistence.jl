@@ -1,9 +1,9 @@
 # src/persistence.jl
 module Persistence
 
-export create_custom_filtration
+export create_custom_filtration, concatenate_silhouette, create_persistence_silhoutte, create_diagram_silhoutte
 
-using LinearAlgebra, Plots, Ripserer, PersistenceDiagrams 
+using LinearAlgebra, Plots, Ripserer, PersistenceDiagrams, Distances
 
 include("filtration.jl")
 import .Filtration
@@ -175,6 +175,30 @@ function persistence_silhoutte(diagram; T = 100, p=1)
     return sil
 end 
 
+function concatenate_silhouette(silhoutte, weights)
+    # concatenates the persistence silhouttes for the different H_i 
+
+    # INPUT 
+    # silhoutte = vector with a persistence silhoutte for each i 
+    # weights = vector of same length indicating the weights to put on the different i 
+
+    # OUTPUT 
+    # sil_total = concatenated silhouette 
+    
+    sil_total = []
+    for (i,sil) in enumerate(silhoutte) 
+
+        # normalize in each dimension separatly 
+        if !(norm(sil) == 0)
+            sil ./ norm(sil)
+        end 
+        # concatenate 
+        append!(sil_total,weights[i] .* sil)
+    end 
+
+    return sil_total
+end 
+
 function create_persistence_silhoutte(diagrams, weights)
     # creates the concatenated silhouettes for all the diagrams 
 
@@ -184,25 +208,58 @@ function create_persistence_silhoutte(diagrams, weights)
     # OUTPUT 
     # silhouettes =  list contatining all the concatenated silhouttes for all the pointclouds 
 
-    # concatenate all the persistence silhuettes
+    # concatenate all the persistence silhoutte
     silhouettes = []
     for all_diag in diagrams
-        # concatenated silhouettes 
-
-        sil_total = []
-        for (i,diag) in enumerate(all_diag) 
-
-            # normalize in each dimension separatly 
-            sil = persistence_silhoutte(diag) 
-            if !(norm(sil) == 0)
-                sil ./ norm(sil)
-            end 
-            # concatenate 
-            append!(sil_total,weights[i] .* sil)
-        end 
+        # create silhouettes 
+        silhoutte = [persistence_silhoutte(diag) for diag in all_diag] 
         # add concatenated sequence to all the others 
-        push!(silhouettes, sil_total)
+        push!(silhouettes, concatenate_silhouette(silhoutte, weights))
     end 
     return silhouettes
+end 
+
+function create_diagram_silhoutte(pointclouds)
+    # function that driectly computes the persistence silhouette to avoid out of memory error
+
+    # INPUT 
+    # pointcloud 
+
+    # OUTPUT 
+    n_pointclouds = length(pointclouds)
+    dim = length(pointclouds[1][1])
+
+    silhouttes = []
+
+    for i in 1:n_pointclouds 
+
+        println("Pointcloud No. ", i)
+        # for each pointcloud
+        # 1) compute persistence diagram with ripserer 
+        # 2) compute persistence_silhoutte for each diagram 
+        pc = pointclouds[i]
+        ε = 0.2 * maximum(pairwise(Euclidean(), stack(pc)', dims=2))
+        result = ripserer(pc; dim_max = dim-1, metric = Euclidean(), threshold = ε)
+
+        # free pc 
+        pc = nothing 
+
+        # compute silhouettte 
+        sil = []
+        for diag in result 
+            push!(sil, persistence_silhoutte(diag))
+        end
+
+        # free result 
+        result = nothing 
+        
+        # save silhoutte 
+        push!(silhouttes, sil)
+
+        # free sil 
+        sil = nothing 
+    end 
+    return silhouttes
+
 end 
 end # end module 

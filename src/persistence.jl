@@ -11,6 +11,8 @@ import .Filtration
 """ Computing persistence homology wit hthe help of useful packages """
 
 function create_custom_filtration(filtration)
+    # Eske 
+
     # from filtration to the custom filtration that can be used as input in ripserer 
 
     # INPUT 
@@ -33,6 +35,18 @@ function create_custom_filtration(filtration)
 end 
 
 function create_persistence_diagram(pointclouds, filtration_type, print_output)
+    # Eske 
+    
+    # create the persistecne diagrams for all the pointclouds in pointcloud using the specified type of filtration 
+
+    # INPUT 
+    # pointclouds = vector containing the pointclouds 
+    # filtration_type = "Rips", "Cech" or "Ripserer"
+    # print_output = boolean if you want a printed output to know what the code is currently doing 
+
+    # OUTPUT 
+    # results = vector containing for each pointcloud the persistence diagrams of the different dimension (up to dim of the pointcloud -1)
+
     if print_output
         println("Create Wasserstein Matrix with the filtration_type ", filtration_type)
     end 
@@ -110,7 +124,15 @@ function create_persistence_diagram(pointclouds, filtration_type, print_output)
 end 
 
 function create_wasserstein_matrix(diagrams)
-    # crate a matrix containing the wasserstein distances for all the pointclouds
+    # Eske 
+
+    # create a matrix containing the wasserstein distances for all the pointclouds
+
+    # INPUT 
+    # diagrams = vector containing the persistecne diagrams of all dimensions 
+
+    # OUPUT 
+    # one distance matrix for each dimension
     n_dim = length(diagrams[1])
     n_diagrams = length(diagrams)
     Ds = [zeros(n_diagrams, n_diagrams) for i in 1:n_dim]
@@ -133,6 +155,8 @@ function create_wasserstein_matrix(diagrams)
 end 
 
 function persistence_silhoutte(diagram; T = 100, p=1)
+    # Eske 
+
     # computes the persistence silhouette using the definitions from this paper https://arxiv.org/pdf/1312.0308
 
     # INPUT 
@@ -176,6 +200,8 @@ function persistence_silhoutte(diagram; T = 100, p=1)
 end 
 
 function concatenate_silhouette(silhoutte, weights)
+    # Eske 
+
     # concatenates the persistence silhouttes for the different H_i 
 
     # INPUT 
@@ -195,11 +221,13 @@ function concatenate_silhouette(silhoutte, weights)
         # concatenate 
         append!(sil_total,weights[i] .* sil)
     end 
-
+    
     return sil_total
 end 
 
 function create_persistence_silhoutte(diagrams, weights)
+    # Eske 
+
     # creates the concatenated silhouettes for all the diagrams 
 
     # INPUT 
@@ -220,6 +248,8 @@ function create_persistence_silhoutte(diagrams, weights)
 end 
 
 function create_diagram_silhoutte(pointclouds)
+    # Eske 
+
     # function that driectly computes the persistence silhouette to avoid out of memory error
 
     # INPUT 
@@ -240,7 +270,7 @@ function create_diagram_silhoutte(pointclouds)
         pc = pointclouds[i]
         ε = 0.2 * maximum(pairwise(Euclidean(), stack(pc)', dims=2))
         result = ripserer(pc; dim_max = dim-1, metric = Euclidean(), threshold = ε)
-
+        println("- ripserer computed")
         # free pc 
         pc = nothing 
 
@@ -255,7 +285,7 @@ function create_diagram_silhoutte(pointclouds)
         
         # save silhoutte 
         push!(silhouttes, sil)
-
+        println("- silhoutte computed")
         # free sil 
         sil = nothing 
     end 

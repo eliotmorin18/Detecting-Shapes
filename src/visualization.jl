@@ -6,6 +6,8 @@ export pointcloud_3d, plot_persistence_silhouette_approx
 using Plots
 
 function plot_pointcloud_3d(S; check_npoints = true)
+    # Eske
+
     # plots a pointcloud in 3d 
 
     # INPUT 
@@ -45,6 +47,8 @@ function plot_pointcloud_3d(S; check_npoints = true)
 end 
 
 function plot_persistence_silhouette_approx(ts; ttl = "persistence silhouette")
+    # Eske
+
     # INPUT
     # vector ts indicating the value of the persistence silhuette at time t 
     

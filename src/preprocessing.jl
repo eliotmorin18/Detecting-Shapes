@@ -22,6 +22,8 @@ Loads a point cloud from CSV and returns a numeric matrix ready for processing.
 
 
 function load_pointcloud_csv(path::AbstractString)::Matrix{Float64}
+    # eliot 
+
     df = CSV.read(path, DataFrame)
 
     # If the file has more than 3 columns, we keep only the first 3.
@@ -48,6 +50,8 @@ Output:
 Centers the cloud by subtracting the mean of each coordinate.
 """
 function center_points(P::AbstractMatrix{<:Real})::Matrix{Float64}
+    # eliot 
+
     Pf = Matrix{Float64}(P)
     c = vec(mean(Pf, dims=1))              # center (x̄, ȳ, z̄)
     Pc = Pf .- reshape(c, 1, :)            # subtract from every row
@@ -74,6 +78,8 @@ function normalize_scale(
     target::Real = 1.0,
     eps::Real = 1e-12
 )::Matrix{Float64}
+# eliot 
+
     Pf = Matrix{Float64}(P)
     norms = sqrt.(sum(Pf.^2, dims=2))[:]   # Euclidean norm per point
     rmax = maximum(norms)
@@ -106,6 +112,7 @@ function prepare_points(
     do_center::Bool = true,
     do_normalize::Bool = true
 )::Matrix{Float64}
+# eliot 
     P = load_pointcloud_csv(path)
     if do_center
         P = center_points(P)

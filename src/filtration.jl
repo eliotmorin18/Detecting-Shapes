@@ -8,6 +8,8 @@ using Combinatorics
 using Statistics
 
 function rips_complex(S, r) 
+    # Eske 
+
     # builds the Rips complex for the point cloud S with radius r 
     
     # INPUT
@@ -85,6 +87,8 @@ function rips_complex(S, r)
 end 
 
 function rips_filtration(S, R)
+    # Eske 
+
     # builds the Rips filtration for the point cloud S with radi given by the list R 
     
     # INPUT
@@ -103,6 +107,8 @@ function rips_filtration(S, R)
 end 
 
 function cech_complex(S, r) 
+    # Eske 
+
     # builds the Chech complex for the point cloud S with radius r 
     
     # INPUT
@@ -185,6 +191,8 @@ function cech_complex(S, r)
 end 
 
 function cech_filtration(S, R)
+    # Eske 
+
     # builds the Cech filtration for the point cloud S with radi given by the list R 
     
     # INPUT
@@ -203,6 +211,8 @@ function cech_filtration(S, R)
 end 
 
 function minimal_enclosing_ball(S)
+    # Eske 
+
     # computes the origin and radius of the minimal enclosing ball containing all points of S 
 
     # INPUT 
@@ -249,6 +259,8 @@ function minimal_enclosing_ball(S)
 end 
 
 function quantile_distances(S; n_quantiles = 5)
+    # Eske 
+    
     # computes n_quantiles between 0.05 and 1 to get good values for the radius in the filtration 
 
     # INPUT 

@@ -48,7 +48,7 @@ function create_persistence_diagram(pointclouds, filtration_type, print_output)
     # results = vector containing for each pointcloud the persistence diagrams of the different dimension (up to dim of the pointcloud -1)
 
     if print_output
-        println("Create Wasserstein Matrix with the filtration_type ", filtration_type)
+        println("Create Persistence Diagram with the filtration_type ", filtration_type)
     end 
 
     n_pointclouds = length(pointclouds)

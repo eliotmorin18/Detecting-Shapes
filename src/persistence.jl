@@ -215,9 +215,9 @@ function concatenate_silhouette(silhoutte, weights)
     for (i,sil) in enumerate(silhoutte) 
 
         # normalize in each dimension separatly 
-        if !(norm(sil) == 0)
-            sil ./ norm(sil)
-        end 
+        #if !(norm(sil) == 0)
+        #    sil ./ norm(sil)
+        #end 
         # concatenate 
         append!(sil_total,weights[i] .* sil)
     end 
